@@ -1,0 +1,11 @@
+{
+  "name": "simcirjs",
+  "description": "SimcirJS",
+  "scripts": {
+    "format": "prettier --write simcir-basicset.js basicset"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "2.5.1"
+  }
+}
