@@ -2,8 +2,13 @@
 // SimcirJS - basicset
 //
 // Copyright (c) 2014 Kazuhiko Arase
+// Copyright (c) 2022 Stijn Ruts
 //
-// URL: http://www.d-project.com/
+// URLs:
+//  http://www.d-project.com
+//  https://kazuhikoarase.github.io/simcirjs
+//  https://github.com/kazuhikoarase/simcirjs
+//  https://github.com/StijnRuts/simcirjs
 //
 // Licensed under the MIT license:
 //  http://www.opensource.org/licenses/mit-license.php
@@ -11,19 +16,27 @@
 
 "use strict";
 
-import { isHot } from "../helpers/signal";
+import { valueToBool } from "../helpers/signal";
 import {
-  createSegUI,
+  segmentsUI,
   defaultLEDBgColor,
   defaultLEDColor,
-  drawSeg,
+  drawSegmentsPattern,
 } from "./helpers/LED";
 import { multiplyColor } from "./helpers/color";
-import { _7Seg } from "./LED_7seg";
+import { _7segments } from "./LED_7seg";
+import { createDoc } from "../helpers/doc";
 
 const $s = simcir;
 
-const _PATTERNS = {
+/**
+ *  a
+ * f b
+ *  g
+ * e c
+ *  d
+ */
+const PATTERNS = {
   0: "abcdef",
   1: "bc",
   2: "abdeg",
@@ -42,47 +55,66 @@ const _PATTERNS = {
   f: "aefg",
 };
 
-const getPattern = function (value) {
-  return _PATTERNS["0123456789abcdef".charAt(value)];
+const getPattern = (value) => {
+  return PATTERNS["0123456789abcdef".charAt(value)];
 };
 
-export const LED_4bit7seg = function (device) {
-  const hiColor = device.deviceDef.color || defaultLEDColor;
-  const bgColor = device.deviceDef.bgColor || defaultLEDBgColor;
-  const loColor = multiplyColor(hiColor, bgColor, 0.25);
+const params = [
+  {
+    name: "color",
+    type: "string",
+    defaultValue: defaultLEDColor,
+    description: "color in hexadecimal.",
+  },
+  {
+    name: "bgColor",
+    type: "string",
+    defaultValue: defaultLEDBgColor,
+    description: "background color in hexadecimal.",
+  },
+];
 
-  for (let i = 0; i < 4; i += 1) {
+export const LED_4bit7seg = (device) => {
+  const bgColor = device.deviceDef.bgColor || defaultLEDBgColor;
+  const onColor = device.deviceDef.color || defaultLEDColor;
+  const offColor = multiplyColor(onColor, bgColor, 0.25);
+
+  for (let i = 0; i < 4; i++) {
     device.addInput();
   }
 
   const super_getSize = device.getSize;
-  device.getSize = function () {
+  device.getSize = () => {
     const size = super_getSize();
     return { width: $s.unit * 4, height: size.height };
   };
 
   const super_createUI = device.createUI;
-  device.createUI = function () {
+  device.createUI = () => {
     super_createUI();
 
-    const seg = _7Seg;
-    const $seg = createSegUI(device, seg);
+    const segments = _7segments;
+    const $seg = segmentsUI(device, segments);
     device.$ui.append($seg);
 
-    const update = function () {
+    const getInputValue = () => {
       let value = 0;
-      for (let i = 0; i < 4; i += 1) {
-        if (isHot(device.getInputs()[i].getValue())) {
+      for (let i = 0; i < 4; i++) {
+        if (valueToBool(device.getInputs()[i].getValue())) {
           value += 1 << i;
         }
       }
+      return value;
+    };
+
+    const update = () => {
       $seg.children().remove();
-      drawSeg(
-        seg,
+      drawSegmentsPattern(
         $s.graphics($seg),
-        getPattern(value),
-        hiColor,
-        loColor,
+        segments,
+        getPattern(getInputValue()),
+        onColor,
+        offColor,
         bgColor
       );
     };
@@ -90,27 +122,6 @@ export const LED_4bit7seg = function (device) {
     device.$ui.on("inputValueChange", update);
     update();
 
-    device.doc = {
-      params: [
-        {
-          name: "color",
-          type: "string",
-          defaultValue: defaultLEDColor,
-          description: "color in hexadecimal.",
-        },
-        {
-          name: "bgColor",
-          type: "string",
-          defaultValue: defaultLEDBgColor,
-          description: "background color in hexadecimal.",
-        },
-      ],
-      code:
-        '{"type":"' +
-        device.deviceDef.type +
-        '","color":"' +
-        defaultLEDColor +
-        '"}',
-    };
+    device.doc = createDoc(device, params);
   };
 };

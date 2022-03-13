@@ -2,8 +2,13 @@
 // SimcirJS - basicset
 //
 // Copyright (c) 2014 Kazuhiko Arase
+// Copyright (c) 2022 Stijn Ruts
 //
-// URL: http://www.d-project.com/
+// URLs:
+//  http://www.d-project.com
+//  https://kazuhikoarase.github.io/simcirjs
+//  https://github.com/kazuhikoarase/simcirjs
+//  https://github.com/StijnRuts/simcirjs
 //
 // Licensed under the MIT license:
 //  http://www.opensource.org/licenses/mit-license.php
@@ -11,21 +16,33 @@
 
 "use strict";
 
-export const OSC = function (device) {
-  const freq = device.deviceDef.freq || 10;
-  const delay = ~~(500 / freq);
-  const out1 = device.addOutput();
+import { createDoc } from "../helpers/doc";
+import { boolToValue } from "../helpers/signal";
+
+const params = [
+  {
+    name: "freq",
+    type: "number",
+    defaultValue: "2",
+    description: "frequency of an oscillator.",
+  },
+];
+
+export const OSC = (device) => {
+  const freq = device.deviceDef.freq || 2;
+  const output = device.addOutput();
 
   let timerId = null;
   let on = false;
 
-  device.$ui.on("deviceAdd", function () {
-    timerId = window.setInterval(function () {
-      out1.setValue(on ? 1 : null);
+  device.$ui.on("deviceAdd", () => {
+    timerId = window.setInterval(() => {
       on = !on;
-    }, delay);
+      output.setValue(boolToValue(on));
+    }, 500 / freq);
   });
-  device.$ui.on("deviceRemove", function () {
+
+  device.$ui.on("deviceRemove", () => {
     if (timerId != null) {
       window.clearInterval(timerId);
       timerId = null;
@@ -33,19 +50,9 @@ export const OSC = function (device) {
   });
 
   const super_createUI = device.createUI;
-  device.createUI = function () {
+  device.createUI = () => {
     super_createUI();
     device.$ui.addClass("simcir-basicset-osc");
-    device.doc = {
-      params: [
-        {
-          name: "freq",
-          type: "number",
-          defaultValue: "10",
-          description: "frequency of an oscillator.",
-        },
-      ],
-      code: '{"type":"' + device.deviceDef.type + '","freq":10}',
-    };
+    device.doc = createDoc(device, params);
   };
 };

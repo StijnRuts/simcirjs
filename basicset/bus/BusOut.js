@@ -11,24 +11,33 @@
 
 "use strict";
 
-import { isHot } from "../helpers/signal";
+import { valueToBool } from "../helpers/signal";
+import { createDoc } from "../helpers/doc";
 
-export const BusOut = function (device) {
+const params = [
+  {
+    name: "numInputs",
+    type: "number",
+    defaultValue: 8,
+    description: "number of inputs.",
+  },
+];
+
+export const BusOut = (device) => {
   const numInputs = Math.max(2, device.deviceDef.numInputs || 8);
-
   device.halfPitch = true;
 
-  for (let i = 0; i < numInputs; i += 1) {
+  for (let i = 0; i < numInputs; i++) {
     device.addInput();
   }
   device.addOutput("", "x" + numInputs);
 
-  device.$ui.on("inputValueChange", function () {
+  device.$ui.on("inputValueChange", () => {
     let busValue = [];
     let hotCount = 0;
-    for (let i = 0; i < numInputs; i += 1) {
+    for (let i = 0; i < numInputs; i++) {
       const value = device.getInputs()[i].getValue();
-      if (isHot(value)) {
+      if (valueToBool(value)) {
         hotCount += 1;
       }
       busValue.push(value);
@@ -37,18 +46,8 @@ export const BusOut = function (device) {
   });
 
   const super_createUI = device.createUI;
-  device.createUI = function () {
+  device.createUI = () => {
     super_createUI();
-    device.doc = {
-      params: [
-        {
-          name: "numInputs",
-          type: "number",
-          defaultValue: 8,
-          description: "number of inputs.",
-        },
-      ],
-      code: '{"type":"' + device.deviceDef.type + '","numInputs":8}',
-    };
+    device.doc = createDoc(device, params);
   };
 };

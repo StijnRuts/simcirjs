@@ -11,44 +11,44 @@
 
 "use strict";
 
-export const BusIn = function (device) {
-  const numOutputs = Math.max(2, device.deviceDef.numOutputs || 8);
+import { createDoc } from "../helpers/doc";
 
+const params = [
+  {
+    name: "numOutputs",
+    type: "number",
+    defaultValue: 8,
+    description: "number of outputs.",
+  },
+];
+
+export const BusIn = (device) => {
+  const numOutputs = Math.max(2, device.deviceDef.numOutputs || 8);
   device.halfPitch = true;
 
   device.addInput("", "x" + numOutputs);
-  for (let i = 0; i < numOutputs; i += 1) {
+  for (let i = 0; i < numOutputs; i++) {
     device.addOutput();
   }
 
-  const extractValue = function (busValue, i) {
-    return busValue != null &&
-      typeof busValue === "object" &&
-      typeof busValue[i] !== "undefined"
-      ? busValue[i]
-      : null;
-  };
+  device.$ui.on("inputValueChange", () => {
+    const extractValue = (busValue, i) => {
+      return busValue != null &&
+        typeof busValue === "object" &&
+        typeof busValue[i] !== "undefined"
+        ? busValue[i]
+        : null;
+    };
 
-  device.$ui.on("inputValueChange", function () {
     const busValue = device.getInputs()[0].getValue();
-    for (let i = 0; i < numOutputs; i += 1) {
+    for (let i = 0; i < numOutputs; i++) {
       device.getOutputs()[i].setValue(extractValue(busValue, i));
     }
   });
 
   const super_createUI = device.createUI;
-  device.createUI = function () {
+  device.createUI = () => {
     super_createUI();
-    device.doc = {
-      params: [
-        {
-          name: "numOutputs",
-          type: "number",
-          defaultValue: 8,
-          description: "number of outputs.",
-        },
-      ],
-      code: '{"type":"' + device.deviceDef.type + '","numOutputs":8}',
-    };
+    device.doc = createDoc(device, params);
   };
 };

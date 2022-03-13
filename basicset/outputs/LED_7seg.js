@@ -2,8 +2,13 @@
 // SimcirJS - basicset
 //
 // Copyright (c) 2014 Kazuhiko Arase
+// Copyright (c) 2022 Stijn Ruts
 //
-// URL: http://www.d-project.com/
+// URLs:
+//  http://www.d-project.com
+//  https://kazuhikoarase.github.io/simcirjs
+//  https://github.com/kazuhikoarase/simcirjs
+//  https://github.com/StijnRuts/simcirjs
 //
 // Licensed under the MIT license:
 //  http://www.opensource.org/licenses/mit-license.php
@@ -11,8 +16,15 @@
 
 "use strict";
 
-import { createLEDSegFactory, drawSegment } from "./helpers/LED";
+import { createLEDSegmentDisplay, drawSegment } from "./helpers/LED";
 
+/**
+ *  a
+ * f b
+ *  g
+ * e c
+ *  d
+ */
 const segmentData = {
   a: [575, 138, 494, 211, 249, 211, 194, 137, 213, 120, 559, 120],
   b: [595, 160, 544, 452, 493, 500, 459, 456, 500, 220, 582, 146],
@@ -23,12 +35,12 @@ const segmentData = {
   g: [485, 507, 433, 555, 190, 555, 156, 509, 204, 464, 451, 464],
 };
 
-export const _7Seg = {
+export const _7segments = {
   width: 636,
   height: 1000,
   allSegments: "abcdefg",
   drawSegment: drawSegment(segmentData),
-  drawPoint: function (g, color) {
+  drawPoint: (g, color) => {
     if (!color) {
       return;
     }
@@ -37,4 +49,4 @@ export const _7Seg = {
   },
 };
 
-export const LED_7seg = createLEDSegFactory(_7Seg);
+export const LED_7seg = createLEDSegmentDisplay(_7segments);

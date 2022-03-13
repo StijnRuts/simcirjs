@@ -16,14 +16,15 @@
 
 "use strict";
 
-import { createButton } from "./helpers/abstract-button";
+export const createDoc = (device, params) => {
+  let code = {};
+  code.type = device.deviceDef.type;
+  params.forEach((param) => {
+    code[param.name] = param.defaultValue;
+  });
 
-const getInitialValue = () => true;
-const getValueOnDown = () => false;
-const getValueOnUp = () => true;
-
-export const PushOff = createButton(
-  getInitialValue,
-  getValueOnDown,
-  getValueOnUp
-);
+  return {
+    params: params,
+    code: JSON.stringify(code),
+  };
+};
