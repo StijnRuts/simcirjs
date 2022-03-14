@@ -1,0 +1,81 @@
+//
+// SimcirJS - library
+//
+// Copyright (c) 2014 Kazuhiko Arase
+//
+// URLs:
+//  http://www.d-project.com
+//  https://kazuhikoarase.github.io/simcirjs
+//  https://github.com/kazuhikoarase/simcirjs
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+
+{
+  width: 440,
+  height: 360,
+  showToolbox: false,
+  toolbox: [],
+  devices: [
+    { type: "In", id: "dev0", x: 32, y: 56, label: "D0" },
+    { type: "In", id: "dev1", x: 32, y: 104, label: "D1" },
+    { type: "In", id: "dev2", x: 32, y: 152, label: "D2" },
+    { type: "In", id: "dev3", x: 32, y: 200, label: "D3" },
+    { type: "In", id: "dev4", x: 32, y: 264, label: "OE" },
+    { type: "NOT", id: "dev5", x: 80, y: 200, label: "NOT" },
+    { type: "AND", id: "dev6", x: 136, y: 208, label: "AND" },
+    { type: "AND", id: "dev7", x: 136, y: 256, label: "AND" },
+    {
+      type: "3to8BinaryDecoder",
+      id: "dev8",
+      x: 208,
+      y: 32,
+      label: "3to8BinaryDecoder",
+    },
+    {
+      type: "3to8BinaryDecoder",
+      id: "dev9",
+      x: 208,
+      y: 184,
+      label: "3to8BinaryDecoder",
+    },
+    { type: "BusOut", id: "dev10", x: 320, y: 88, label: "BusOut" },
+    { type: "BusOut", id: "dev11", x: 320, y: 184, label: "BusOut" },
+    { type: "Out", id: "dev12", x: 376, y: 128, label: "A0" },
+    { type: "Out", id: "dev13", x: 376, y: 184, label: "A1" },
+  ],
+  connectors: [
+    { from: "dev5.in0", to: "dev3.out0" },
+    { from: "dev6.in0", to: "dev5.out0" },
+    { from: "dev6.in1", to: "dev4.out0" },
+    { from: "dev7.in0", to: "dev3.out0" },
+    { from: "dev7.in1", to: "dev4.out0" },
+    { from: "dev8.in0", to: "dev0.out0" },
+    { from: "dev8.in1", to: "dev1.out0" },
+    { from: "dev8.in2", to: "dev2.out0" },
+    { from: "dev8.in3", to: "dev6.out0" },
+    { from: "dev9.in0", to: "dev0.out0" },
+    { from: "dev9.in1", to: "dev1.out0" },
+    { from: "dev9.in2", to: "dev2.out0" },
+    { from: "dev9.in3", to: "dev7.out0" },
+    { from: "dev10.in0", to: "dev8.out0" },
+    { from: "dev10.in1", to: "dev8.out1" },
+    { from: "dev10.in2", to: "dev8.out2" },
+    { from: "dev10.in3", to: "dev8.out3" },
+    { from: "dev10.in4", to: "dev8.out4" },
+    { from: "dev10.in5", to: "dev8.out5" },
+    { from: "dev10.in6", to: "dev8.out6" },
+    { from: "dev10.in7", to: "dev8.out7" },
+    { from: "dev11.in0", to: "dev9.out0" },
+    { from: "dev11.in1", to: "dev9.out1" },
+    { from: "dev11.in2", to: "dev9.out2" },
+    { from: "dev11.in3", to: "dev9.out3" },
+    { from: "dev11.in4", to: "dev9.out4" },
+    { from: "dev11.in5", to: "dev9.out5" },
+    { from: "dev11.in6", to: "dev9.out6" },
+    { from: "dev11.in7", to: "dev9.out7" },
+    { from: "dev12.in0", to: "dev10.out0" },
+    { from: "dev13.in0", to: "dev11.out0" },
+  ],
+}

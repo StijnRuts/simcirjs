@@ -1,0 +1,72 @@
+//
+// SimcirJS - library
+//
+// Copyright (c) 2014 Kazuhiko Arase
+//
+// URLs:
+//  http://www.d-project.com
+//  https://kazuhikoarase.github.io/simcirjs
+//  https://github.com/kazuhikoarase/simcirjs
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+
+{
+  width: 360,
+  height: 440,
+  showToolbox: false,
+  toolbox: [],
+  devices: [
+    { type: "In", id: "dev0", x: 24, y: 144, label: "D0" },
+    { type: "In", id: "dev1", x: 24, y: 192, label: "D1" },
+    { type: "In", id: "dev2", x: 24, y: 240, label: "D2" },
+    { type: "In", id: "dev3", x: 24, y: 304, label: "OE" },
+    { type: "NOT", id: "dev4", x: 72, y: 240, label: "NOT" },
+    { type: "AND", id: "dev5", x: 120, y: 248, label: "AND" },
+    { type: "AND", id: "dev6", x: 120, y: 296, label: "AND" },
+    {
+      type: "2to4BinaryDecoder",
+      id: "dev7",
+      x: 184,
+      y: 144,
+      label: "2to4BinaryDecoder",
+    },
+    {
+      type: "2to4BinaryDecoder",
+      id: "dev8",
+      x: 184,
+      y: 224,
+      label: "2to4BinaryDecoder",
+    },
+    { type: "Out", id: "dev9", x: 296, y: 32, label: "A0" },
+    { type: "Out", id: "dev10", x: 296, y: 80, label: "A1" },
+    { type: "Out", id: "dev11", x: 296, y: 128, label: "A2" },
+    { type: "Out", id: "dev12", x: 296, y: 176, label: "A3" },
+    { type: "Out", id: "dev13", x: 296, y: 224, label: "A4" },
+    { type: "Out", id: "dev14", x: 296, y: 272, label: "A5" },
+    { type: "Out", id: "dev15", x: 296, y: 320, label: "A6" },
+    { type: "Out", id: "dev16", x: 296, y: 368, label: "A7" },
+  ],
+  connectors: [
+    { from: "dev4.in0", to: "dev2.out0" },
+    { from: "dev5.in0", to: "dev4.out0" },
+    { from: "dev5.in1", to: "dev3.out0" },
+    { from: "dev6.in0", to: "dev2.out0" },
+    { from: "dev6.in1", to: "dev3.out0" },
+    { from: "dev7.in0", to: "dev0.out0" },
+    { from: "dev7.in1", to: "dev1.out0" },
+    { from: "dev7.in2", to: "dev5.out0" },
+    { from: "dev8.in0", to: "dev0.out0" },
+    { from: "dev8.in1", to: "dev1.out0" },
+    { from: "dev8.in2", to: "dev6.out0" },
+    { from: "dev9.in0", to: "dev7.out0" },
+    { from: "dev10.in0", to: "dev7.out1" },
+    { from: "dev11.in0", to: "dev7.out2" },
+    { from: "dev12.in0", to: "dev7.out3" },
+    { from: "dev13.in0", to: "dev8.out0" },
+    { from: "dev14.in0", to: "dev8.out1" },
+    { from: "dev15.in0", to: "dev8.out2" },
+    { from: "dev16.in0", to: "dev8.out3" },
+  ],
+}

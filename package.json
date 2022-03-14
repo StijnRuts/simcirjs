@@ -2,7 +2,7 @@
   "name": "simcirjs",
   "description": "SimcirJS",
   "scripts": {
-    "format": "prettier --write simcir-basicset.js basicset"
+    "format": "prettier --write simcir-basicset.js basicset simcir-library.js library"
   },
   "license": "MIT",
   "devDependencies": {
